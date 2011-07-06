@@ -1,0 +1,79 @@
+   The instructions for GIT can be found:
+   http://help.github.com/win-set-up-git/
+
+
+Generate SSH keys
+
+   10  cd ~/.ssh/
+   12  ssh-keygen -t rsa -C "msnajdr@yahoo.com"
+
+TEST ACCESS:
+
+   17  ssh -T git@github.com
+   18  git config --global user.name "Martin Snajdr"
+   19  git config --global user.email "msnajdr@yahoo.com"
+   20  git config --global github.user msnajdr
+
+The token will be shown in Account Settings as API token
+
+   21  git config --global github.token XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Creating repository
+
+   30  cd /c/eclipse_workspace/msdjango/src/msdjango
+   39  git init
+   42  ls -l
+   43  touch README 
+   44  vi README 
+   45  git add README
+
+Commit to LOCAL 
+
+   46  git commit -m "first commit"
+
+First I made mistake - added wrong repository name (look into github for the proper name)
+
+   47  git remote add origin git@github.com:msnajdr/msdjango.git
+
+FAILED
+
+   48  git push origin master
+
+REMOVED the origin
+
+   51  git remote rm origin
+
+Add the proper origin
+
+   52  git remote add origin git@github.com:msnajdr/My-first-project.git
+   54  git push -u origin master
+
+Creating new repo in different location:
+
+   65  mkdir test_git_repo
+   66  cd test_git_repo/
+   67  git init
+   Define the origin
+   70  git remote add origin git@github.com:msnajdr/My-first-project.git
+   Need to specify the branch (=master)
+   78  git pull origin master
+
+Creating repo on different computer:
+
+Need to generate key-pair and add the public key into the github.com
+Use any comment using the -C flag - does not need to be email
+
+
+REMOVE FILE AND ITS HISTORY FROM GITHUB
+
+   62  git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch README'
+   63  git push origin master --force
+
+ REMOVE BRANCH FROM REMOTE
+
+   64  git push origin :branch_1
+
+ RESET commit history (only needs I think few characters of the token)
+
+git reset --hard <commit token>
+git push origin master
