@@ -1,0 +1,25 @@
+.module{
+  width: 100px;
+  //height: 30px;
+  background-color:cyan;
+}
+#builder {
+	width: 80%;
+	float: right;
+	/* border-style:solid;
+	border-width:1px; */
+	/* overflow: scroll; */
+}
+#module_source {
+	width: 10%;
+	float: left;
+	border-style:solid;
+	border-width:1px;
+}
+.highlight {
+ border: 1px dashed #b5c051;
+}
+
+.highlight-accept {
+   background: #d9dfa4; 
+}
