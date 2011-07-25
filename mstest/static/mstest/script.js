@@ -34,47 +34,64 @@ $(document).ready(function() {
 	});
 	$(".marker.permanent").live("mouseover mouseout click", function(event) {
 		var connectionId = $(this).attr('connection_id');
-		var selector = '[connection_id="'+connectionId+'"]';
-		var index = flow.connectionsStatusDb.find({id:connectionId});
+		var selector = '[connection_id="' + connectionId + '"]';
+		var index = flow.connectionsStatusDb.find({
+			id : connectionId
+		});
 		var status = flow.connectionsStatusDb.get(index)[0].status;
-		
+
 		if(event.type == "mouseover") {
-			if (status === 'selected') return;
+			if(status === 'selected')
+				return;
 			$(selector).addClass('active');
-			flow.connectionsStatusDb.update({status:'active'},index);
-		} else if(event.type == "mouseout"){
-			if (status === 'selected') return;
+			flow.connectionsStatusDb.update({
+				status : 'active'
+			}, index);
+		} else if(event.type == "mouseout") {
+			if(status === 'selected')
+				return;
 			$(selector).removeClass('active');
-			flow.connectionsStatusDb.update({status:'passive'},index);
-		} else if(event.type == "click"){
-			if (status === 'selected') {
+			flow.connectionsStatusDb.update({
+				status : 'passive'
+			}, index);
+		} else if(event.type == "click") {
+			if(status === 'selected') {
 				$(selector).removeClass('selected');
-				flow.connectionsStatusDb.update({status:'passive'},index);
+				flow.connectionsStatusDb.update({
+					status : 'passive'
+				}, index);
 			} else {
 				$(selector).addClass('selected');
-				flow.connectionsStatusDb.update({status:'selected'},index);
+				flow.connectionsStatusDb.update({
+					status : 'selected'
+				}, index);
 			}
 		}
 	});
-	$('.module').live("click",function(event) {
+	$('.module').live("click", function(event) {
 		var connectionId = $(this).attr('id');
-		var index = flow.moduleDb.find({id:connectionId});
+		var index = flow.moduleDb.find({
+			id : connectionId
+		});
 		var status = flow.moduleDb.get(index)[0].status;
-		if (event.type == 'click') {
-			if (status === 'selected') {
+		if(event.type == 'click') {
+			if(status === 'selected') {
 				$(this).removeClass('selected');
-				flow.moduleDb.update({status:'passive'},index);
+				flow.moduleDb.update({
+					status : 'passive'
+				}, index);
 			} else {
 				$(this).addClass('selected');
-				flow.moduleDb.update({status:'selected'},index);
-			}	
+				flow.moduleDb.update({
+					status : 'selected'
+				}, index);
+			}
 		}
 	});
-	$('.module .edit').live('click',function(event){
+	$('.module .edit').live('click', function(event) {
 		$(this).parent().find('.settings').toggle();
 		event.stopPropagation();
 	});
-	
 	$('.control').click(controlClick);
 	bwidth = $('#builder').outerWidth();
 	bheight = $('#builder').outerHeight();
@@ -125,46 +142,62 @@ $(document).ready(function() {
 	}
 	flow = new Flow();
 });
-
-function Flow_removeSelectedModules()
-{
-	var selectedModules = this.moduleDb.get({status:'selected'});
+function Flow_removeSelectedModules() {
+	var selectedModules = this.moduleDb.get({
+		status : 'selected'
+	});
 	for(var i = 0; i < selectedModules.length; i += 1) {
 		var connectionId = selectedModules[i].id;
 		this.removeModule(connectionId);
 	}
 }
 
-function Flow_removeModule(id)
-{
+function Flow_removeModule(id) {
 	// find all connections related to this module and remove them first
-	var connectionsToRemove = flow.connectionsDb.get({moduleId:id});
-	for(var i = 0;i<connectionsToRemove.length;i+=1) {
+	var connectionsToRemove = flow.connectionsDb.get({
+		moduleId : id
+	});
+	for(var i = 0; i < connectionsToRemove.length; i += 1) {
 		this.removeConnection(connectionsToRemove[i].id);
 	}
 	$('#'+id).remove();
-	this.moduleDb.remove({id:id});
+	this.moduleDb.remove({
+		id : id
+	});
 }
 
-function Flow_addModule(type)
-{
+function Flow_addModule(type) {
 	var moduleId = 'module_' + this.getNewModuleId();
-	this.moduleDb.insert({id:moduleId,type:type,status:'passive'});
+	this.moduleDb.insert({
+		id : moduleId,
+		type : type,
+		status : 'passive'
+	});
 	return moduleId;
 }
 
-function controlClick(event)
-{
+function controlClick(event) {
 	var clicked = $(this).attr('id');
-	if (clicked === 'delete') {
+	if(clicked === 'delete') {
 		flow.removeSelectedConnections();
 		flow.removeSelectedModules();
+	} else if(clicked === 'run') {
+		sendData = {
+			connections : flow.connectionsDb.stringify(),
+			modules : flow.moduleDb.stringify()
+		}
+		//sendData = {connections:"hoho"};
+		$.get("/mstest/run/", sendData, function(data) {
+			console.log(data.name);
+		}, "json");
 	}
 }
 
 function Flow_removeSelectedConnections() {
-	// 
-	var selectedConenctions = this.connectionsStatusDb.get({status:'selected'});
+	//
+	var selectedConenctions = this.connectionsStatusDb.get({
+		status : 'selected'
+	});
 	for(var i = 0; i < selectedConenctions.length; i += 1) {
 		var connectionId = selectedConenctions[i].id;
 		this.removeConnection(connectionId);
@@ -176,13 +209,17 @@ function Flow_removeConnection(id) {
 	anchors = this.getConnectionAnchors(id);
 	anchors[0].removeClass('connected');
 	anchors[1].removeClass('connected');
-	this.connectionsDb.remove({id:id});
-	this.connectionsStatusDb.remove({id:id});
+	this.connectionsDb.remove({
+		id : id
+	});
+	this.connectionsStatusDb.remove({
+		id : id
+	});
 }
 
 function Flow_addConnection(fromElement, toElement) {
 	var connectionId = this.getNewConnectionId();
-	makePermanentConnection(fromElement, toElement,connectionId);
+	makePermanentConnection(fromElement, toElement, connectionId);
 	fromConnection = {
 		id : connectionId,
 		moduleId : fromElement.parent().attr('id'),
@@ -196,7 +233,10 @@ function Flow_addConnection(fromElement, toElement) {
 		anchorId : toElement.attr('gate_id')
 	}
 	this.connectionsDb.insert([fromConnection, toConnection]);
-	this.connectionsStatusDb.insert({id:connectionId,status:'passive'});
+	this.connectionsStatusDb.insert({
+		id : connectionId,
+		status : 'passive'
+	});
 	// hook drag function
 	toElement.parent().draggable({
 		drag : moduleDrag
@@ -223,13 +263,13 @@ function FLow_clearConnection(id) {
 	$('.marker.permanent[connection_id="' + id + '"]"').remove();
 }
 
-
-function Flow_getConnectionAnchors(id)
-{
-	var c = this.connectionsDb.get({id : id});
+function Flow_getConnectionAnchors(id) {
+	var c = this.connectionsDb.get({
+		id : id
+	});
 	var sel1 = '#' + c[0].moduleId + ' .' + c[0].type + '[gate_id="' + c[0].anchorId + '"]';
 	var sel2 = '#' + c[1].moduleId + ' .' + c[1].type + '[gate_id="' + c[1].anchorId + '"]';
-	return [$(sel1),$(sel2)];
+	return [$(sel1), $(sel2)];
 }
 
 function Flow_redrawConnection(id) {
@@ -273,7 +313,8 @@ function builderClick(event) {
 	}
 	//$(this).toggleClass('start')
 	//console.log($(this).attr('type'))
-	return false;// do not propagate further
+	return false;
+	// do not propagate further
 }
 
 function resetCanvas(canvas) {
@@ -299,7 +340,7 @@ function drawLine(element, startX, startY, endX, endY, radius, excludeRadius1, e
 	var dx = endX - startX;
 	var dy = endY - startY;
 	var l = Math.sqrt(dx * dx + dy * dy);
-	var n =  Math.floor(l / r2) - 1;
+	var n =    Math.floor(l / r2) - 1;
 	var dt = 1.0 / n;
 	var dl = l / n;
 	// zero means always draw
@@ -325,7 +366,7 @@ function removeTentativeConnection() {
 	$('.marker.tentative').remove();
 }
 
-function makePermanentConnection(fromElement, toElement,id) {
+function makePermanentConnection(fromElement, toElement, id) {
 	removeTentativeConnection();
 	drawConnection(fromElement, toElement, id);
 }
@@ -367,7 +408,7 @@ function dropModule(which) {
 	}
 	var $this = $(which.draggable).clone();
 	var moduleId = flow.addModule($this.attr('type'));
-	$this.attr('id',moduleId);
+	$this.attr('id', moduleId);
 	// create container
 	$this.draggable({
 		// handle: 'p:first',
@@ -391,7 +432,7 @@ function dropModule(which) {
 	mysettings.css({
 		position : 'absolute',
 		top : ($this.find('.edit').outerHeight() + $this.find('.edit').position().top + 10) + 'px',
-		left : ($this.outerWidth() -  mysettings.outerWidth()) / 2
+		left : ($this.outerWidth() -    mysettings.outerWidth()) / 2
 	});
 
 	mysettings.draggable({

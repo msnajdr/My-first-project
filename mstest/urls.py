@@ -3,7 +3,8 @@ from django.conf.urls.defaults import *
 #from polls.models import Poll
 
 urlpatterns = patterns('mstest.views',
-    url(r'^$','main',name='mstest.main')
+    url(r'^$','main',name='mstest.main'),
+    url(r'^run/$','run',name='mstest.run')
 #    (r'^(?P<pk>\d+)/download/$','download'),
 #    (r'^(?P<pk>\d+)/edit/$','edit'),
 #    (r'^(?P<pk>\d+)/delete/$','delete'),
