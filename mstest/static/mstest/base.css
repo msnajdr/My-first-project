@@ -36,9 +36,15 @@ body {
 	border-radius: 5px;
 	opacity:0.3;
 }
+
+.module.selected {
+	background:magenta;
+}
+
 #builder .inlet:hover, #builder .outlet:hover {
 	background: blue;
 }
+
 
 #builder .start {
 	background: yellow;
@@ -52,6 +58,13 @@ body {
 	background: gray;
 }
 
+.active {
+	background: magenta;
+}
+
+.selected {
+	background: blue;
+}
 
 .outlet {
 	width: 20px;
@@ -111,10 +124,13 @@ body {
 .highlight-accept {
    background: #d9dfa4; 
 }
-ul {
+ul.action_pane {
 	list-style: none;
 	list-style-type: none;
 	display: inline;
+	float: left;
+	padding: 0;
+	margin: 0;
 }
 li {
 	display: inline;

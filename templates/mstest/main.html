@@ -13,8 +13,8 @@
 		<tr>
 			<td>
 				<div class="module" type="foup">
-					<div class="inlet" type="type1" id="1" style="top:-20;left:25;"></div>
-					<div class="outlet" type="type2" id="1" style="bottom:-20;left:25;"></div>
+					<div class="inlet" type="type1" gate_id="1" style="top:-20;left:25;"></div>
+					<div class="outlet" type="type2" gate_id="2" style="bottom:-20;left:25;"></div>
 					<button class="edit">edit</button>
 				</div>
 			</td>
@@ -22,10 +22,10 @@
 		<tr>
 			<td>
 				<div class="module" type="filter">
-					<div class="inlet" type="type2" id="1" style="top:-20;left:10;"></div>
-					<div class="inlet" type="type2" id="2" style="top:-20;right:10;"></div>
-					<div class="outlet" type="type1" id="1" style="bottom:-20;left:10;"></div>
-					<div class="outlet" type="type3" id="1" style="bottom:-20;right:10;"></div>
+					<div class="inlet" type="type2" gate_id="1" style="top:-20;left:10;"></div>
+					<div class="inlet" type="type2" gate_id="2" style="top:-20;right:10;"></div>
+					<div class="outlet" type="type1" gate_id="3" style="bottom:-20;left:10;"></div>
+					<div class="outlet" type="type3" gate_id="4" style="bottom:-20;right:10;"></div>
 					<button class="edit">edit</button>
 				</div>
 			</td>
@@ -34,6 +34,14 @@
 </div>
 
 <div id="builder">
+	<ul class="action_pane">
+	<li>
+		<button class="control" id="delete">Delete</button>
+	</li>
+	<li>
+		<button class="control" id="run">Run</button>
+	</li>
+</ul>
 	<canvas id="painter"></canvas>
 </div>
 <p id="message">message</p>
